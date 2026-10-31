@@ -1,22 +1,40 @@
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import type { NextFunction, Request, Response } from 'express';
 import { AppModule } from './app.module.js';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = app.get(ConfigService);
 
-  const clientOrigin = config.get<string>('CLIENT_ORIGIN') ?? 'http://localhost:3000';
-  const allowedOrigins = new Set(
-    [clientOrigin, 'http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000', 'http://127.0.0.1:3001'],
-  );
-  app.enableCors({
-    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-      if (!origin || allowedOrigins.has(origin)) callback(null, true);
-      else callback(null, false);
-    },
-    credentials: true,
+  const origins = (config.get<string>('CLIENT_ORIGIN') ?? 'http://localhost:3000')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  for (const local of [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:3001',
+  ]) {
+    if (!origins.includes(local)) origins.push(local);
+  }
+
+  app.enableCors({ origin: origins, credentials: true });
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    if (/^\/(auth|orders|payments|configs)(\/|$)/.test(req.path)) {
+      res.setHeader('Cache-Control', 'private, no-store');
+    }
+    if (
+      !['GET', 'HEAD', 'OPTIONS'].includes(req.method) &&
+      req.headers.origin &&
+      !origins.includes(req.headers.origin)
+    ) {
+      res.status(403).json({ message: 'This request origin is not permitted.' });
+      return;
+    }
+    next();
   });
 
   app.useGlobalPipes(
@@ -29,7 +47,8 @@ async function bootstrap() {
   );
 
   const port = config.get<number>('PORT') ?? 4000;
-  await app.listen(port);
-  console.log(`API listening on http://localhost:${port}`);
+  const host = config.get<string>('HOST') ?? '0.0.0.0';
+  await app.listen(port, host);
+  console.log(`NOVA API listening on http://${host}:${port}`);
 }
 await bootstrap();
