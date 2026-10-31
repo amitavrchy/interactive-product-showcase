@@ -94,8 +94,8 @@ export function ScrollChapters() {
       panels.forEach((panel, i) => {
         ScrollTrigger.create({
           trigger: panel,
-          start: "top center",
-          end: "bottom center",
+          start: "top 55%",
+          end: "bottom 45%",
           onEnter: () => {
             setActive(i);
             setExploded(Boolean(CHAPTERS[i].explode));
@@ -106,6 +106,11 @@ export function ScrollChapters() {
           },
         });
       });
+
+      // Re-measure after sticky/layout + Lenis settle
+      requestAnimationFrame(() => ScrollTrigger.refresh());
+      const t = window.setTimeout(() => ScrollTrigger.refresh(), 400);
+      return () => window.clearTimeout(t);
     },
     { scope: sectionRef, dependencies: [reduced] },
   );
@@ -113,7 +118,7 @@ export function ScrollChapters() {
   return (
     <section ref={sectionRef} className="relative border-t border-line bg-void">
       <div className="mx-auto grid max-w-7xl md:grid-cols-2">
-        <div className="md:sticky md:top-16 md:h-[calc(100svh-4rem)]">
+        <div className="sticky top-16 z-10 self-start bg-void md:h-[calc(100svh-4rem)]">
           <div className="flex h-full flex-col justify-center px-5 py-10 md:px-8">
             <p className="font-mono text-[12px] uppercase tracking-[0.28em] text-muted">
               Anatomy · 0{active + 1} / 0{CHAPTERS.length}
@@ -130,15 +135,7 @@ export function ScrollChapters() {
                 {CHAPTERS[active]?.title}
               </motion.p>
             </AnimatePresence>
-            <motion.div
-              className="mt-4 h-[48vh] min-h-[280px] md:h-[58vh]"
-              animate={{
-                scale: exploded ? 0.96 : 1,
-                rotateY: active * 6,
-              }}
-              transition={{ type: "spring", stiffness: 80, damping: 18 }}
-              style={{ transformStyle: "preserve-3d" }}
-            >
+            <div className="mt-4 h-[42vh] min-h-[260px] md:h-[58vh]">
               <ProductCanvas
                 colorHex={color}
                 exploded={exploded}
@@ -147,7 +144,7 @@ export function ScrollChapters() {
                 interactive={false}
                 framed
               />
-            </motion.div>
+            </div>
             <button
               type="button"
               onClick={() => setExploded((v) => !v)}
@@ -158,7 +155,7 @@ export function ScrollChapters() {
           </div>
         </div>
 
-        <div className="border-l border-line">
+        <div className="border-t border-line md:border-l md:border-t-0">
           {CHAPTERS.map((ch) => (
             <article
               key={ch.id}

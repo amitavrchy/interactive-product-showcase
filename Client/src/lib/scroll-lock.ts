@@ -1,12 +1,6 @@
-type LenisLike = {
-  stop: () => void;
-  start: () => void;
-  scrollTo: (v: number, opts?: { immediate?: boolean }) => void;
-};
-
 declare global {
   interface Window {
-    __novaLenis?: LenisLike | null;
+    __novaLenis?: null;
   }
 }
 
@@ -34,8 +28,6 @@ export function lockPageScroll() {
   document.documentElement.classList.add("nova-scroll-locked");
   document.body.classList.add("nova-scroll-locked");
 
-  window.__novaLenis?.stop();
-
   window.addEventListener("wheel", blockEvent, { passive: false, capture: true });
   window.addEventListener("touchmove", blockEvent, { passive: false, capture: true });
   window.addEventListener("scroll", freezeScrollPosition, { passive: false, capture: true });
@@ -55,12 +47,9 @@ export function unlockPageScroll() {
   window.removeEventListener("scroll", freezeScrollPosition, true);
 
   window.scrollTo(scrollX, scrollY);
-  window.__novaLenis?.scrollTo(scrollY, { immediate: true });
-  window.__novaLenis?.start();
 }
 
 export function scrollToTopImmediate() {
-  window.__novaLenis?.scrollTo(0, { immediate: true });
   window.scrollTo(0, 0);
   document.documentElement.scrollTop = 0;
   document.body.scrollTop = 0;

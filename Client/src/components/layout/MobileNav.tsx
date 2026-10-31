@@ -11,7 +11,6 @@ const links = [
   { href: "/products", label: "Products" },
   { href: "/configure/nova-h1", label: "Configure" },
   { href: "/compare", label: "Compare" },
-  { href: "/assistant", label: "AI Concierge" },
   { href: "/cart", label: "Cart" },
 ];
 

@@ -48,7 +48,7 @@ export function Hero() {
             className="mt-8 flex flex-wrap gap-3"
           >
             <Button href="/configure/nova-h1">Configure</Button>
-            <Button type="button" variant="mint" onClick={() => dispatch(setChatOpen(true))}>
+            <Button type="button" variant="secondary" onClick={() => dispatch(setChatOpen(true))}>
               Meet AI
             </Button>
           </motion.div>

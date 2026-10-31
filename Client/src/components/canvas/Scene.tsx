@@ -2,12 +2,7 @@
 
 import { Suspense, useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
-import {
-  ContactShadows,
-  Environment,
-  AdaptiveDpr,
-  AdaptiveEvents,
-} from "@react-three/drei";
+import { ContactShadows, Environment, AdaptiveEvents } from "@react-three/drei";
 import { HeadphoneModel } from "./HeadphoneModel";
 import { SpeakerModel } from "./SpeakerModel";
 import { BudsModel } from "./BudsModel";
@@ -46,7 +41,8 @@ function Model({
     <HeadphoneModel
       colorHex={colorHex}
       exploded={exploded}
-      float={!exploded && !interactive}
+      // DragOrbit owns idle spin — local float fights it and looks jittery
+      float={false}
       scale={1.05}
     />
   );
@@ -77,50 +73,39 @@ export function ProductScene({
       }}
     >
       <Canvas
-        dpr={[1, 1.5]}
+        dpr={[1, Math.min(1.75, typeof window !== "undefined" ? window.devicePixelRatio : 1.5)]}
         camera={{ position: [0, 0.12, cameraZ], fov: 36 }}
-        gl={{ antialias: true, alpha: true }}
+        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         style={{ width: "100%", height: "100%", touchAction: "pan-y", display: "block" }}
         onCreated={({ gl }) => {
           gl.domElement.style.touchAction = "pan-y";
         }}
       >
-        <AdaptiveDpr pixelated />
         <AdaptiveEvents />
         <ambientLight intensity={0.52} />
         <spotLight position={[4, 6, 3]} intensity={2.1} angle={0.4} penumbra={0.85} castShadow />
-        <spotLight position={[-3, 2, -2]} intensity={0.7} color="#7cffb2" />
+        <spotLight position={[-3, 2, -2]} intensity={0.55} color="#ff4d2e" />
 
         <Suspense fallback={null}>
           {/* Lower + centered in frame — size unchanged */}
           <group position={[0, framed ? -0.42 : -0.28, 0]}>
-            {interactive ? (
-              <DragOrbit enabled autoRotate={!exploded}>
-                <Model
-                  productType={productType}
-                  colorHex={colorHex}
-                  exploded={exploded}
-                  interactive={interactive}
-                />
-              </DragOrbit>
-            ) : (
-              <DragOrbit enabled={false} autoRotate>
-                <Model
-                  productType={productType}
-                  colorHex={colorHex}
-                  exploded={exploded}
-                  interactive={false}
-                />
-              </DragOrbit>
-            )}
+            <DragOrbit enabled={interactive} autoRotate={!exploded}>
+              <Model
+                productType={productType}
+                colorHex={colorHex}
+                exploded={exploded}
+                interactive={interactive}
+              />
+            </DragOrbit>
           </group>
 
           <ContactShadows
             position={[0, framed ? -1.55 : -1.45, 0]}
-            opacity={0.4}
+            opacity={0.35}
             scale={12}
-            blur={2.4}
+            blur={2.6}
             far={2.6}
+            frames={1}
           />
           <Environment preset="city" />
         </Suspense>

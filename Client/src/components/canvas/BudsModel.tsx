@@ -41,7 +41,7 @@ export function BudsModel({ colorHex = "#111111" }: { colorHex?: string }) {
       </RoundedBox>
       <mesh position={[0, -0.2, 0.15]}>
         <boxGeometry args={[0.12, 0.02, 0.01]} />
-        <meshStandardMaterial color="#7cffb2" emissive="#7cffb2" emissiveIntensity={0.5} />
+        <meshStandardMaterial color="#ff4d2e" emissive="#ff4d2e" emissiveIntensity={0.45} />
       </mesh>
     </group>
   );

@@ -7,9 +7,9 @@ import { fetchProduct } from "@/lib/api";
 import { formatPrice, cn } from "@/lib/utils";
 import { ProductCanvas } from "@/components/canvas/ProductCanvas";
 import { Button } from "@/components/ui/Button";
-import { ChatPanel } from "@/components/ai/ChatPanel";
 import { useAppDispatch } from "@/store";
 import { addLine } from "@/features/cart/cartSlice";
+import { setChatOpen } from "@/features/ui/uiSlice";
 
 export default function ProductDetailPage({
   params,
@@ -22,7 +22,6 @@ export default function ProductDetailPage({
     queryFn: () => fetchProduct(slug),
   });
   const [colorHex, setColorHex] = useState<string | null>(null);
-  const [askOpen, setAskOpen] = useState(false);
   const dispatch = useAppDispatch();
 
   const variant = useMemo(() => {
@@ -137,7 +136,7 @@ export default function ProductDetailPage({
             <Button href={`/configure/${product.slug}`} variant="secondary">
               Full configure
             </Button>
-            <Button type="button" variant="ghost" onClick={() => setAskOpen((v) => !v)}>
+            <Button type="button" variant="ghost" onClick={() => dispatch(setChatOpen(true))}>
               Ask about this product
             </Button>
           </div>
@@ -160,13 +159,6 @@ export default function ProductDetailPage({
           </p>
         </div>
       </div>
-
-      {askOpen && (
-        <div className="mt-12">
-          <h2 className="font-display mb-4 text-[24px]">Ask NOVA</h2>
-          <ChatPanel productSlug={product.slug} compact />
-        </div>
-      )}
     </div>
   );
 }

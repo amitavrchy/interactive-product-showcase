@@ -12,20 +12,19 @@ type Props = {
 };
 
 /**
- * Drag to orbit. Wheel scroll stays free unless actively dragging.
+ * Drag to orbit. Idle spin is dampened; wheel scroll stays free unless dragging.
  */
 export function DragOrbit({ children, enabled = true, autoRotate = true }: Props) {
   const group = useRef<THREE.Group>(null);
   const dragging = useRef(false);
   const last = useRef({ x: 0, y: 0 });
-  const target = useRef({ yaw: 0.2, pitch: 0.06 });
-  const current = useRef({ yaw: 0.2, pitch: 0.06 });
+  const target = useRef({ yaw: 0.25, pitch: 0.05 });
+  const current = useRef({ yaw: 0.25, pitch: 0.05 });
   const { gl } = useThree();
 
   useEffect(() => {
     if (!enabled) return;
     const el = gl.domElement;
-    // Allow browser/Lenis vertical scroll when hovering; drag still works
     el.style.touchAction = "pan-y";
     el.style.cursor = "grab";
 
@@ -50,11 +49,11 @@ export function DragOrbit({ children, enabled = true, autoRotate = true }: Props
       const dx = e.clientX - last.current.x;
       const dy = e.clientY - last.current.y;
       last.current = { x: e.clientX, y: e.clientY };
-      target.current.yaw += dx * 0.0055;
+      target.current.yaw += dx * 0.0042;
       target.current.pitch = THREE.MathUtils.clamp(
-        target.current.pitch + dy * 0.0035,
-        -0.32,
-        0.32,
+        target.current.pitch + dy * 0.0028,
+        -0.28,
+        0.28,
       );
     };
 
@@ -71,7 +70,6 @@ export function DragOrbit({ children, enabled = true, autoRotate = true }: Props
       }
     };
 
-    // Wheel: do NOT prevent — let page/Lenis scroll while hovering the model
     el.addEventListener("pointerdown", onDown, { passive: false });
     window.addEventListener("pointermove", onMove, { passive: false });
     window.addEventListener("pointerup", onUp, { passive: false });
@@ -88,16 +86,20 @@ export function DragOrbit({ children, enabled = true, autoRotate = true }: Props
     };
   }, [enabled, gl]);
 
-  useFrame((_, dt) => {
+  useFrame((_, delta) => {
     if (!group.current) return;
 
+    // Cap dt so tab-switch / hitch doesn't jump the orbit
+    const dt = Math.min(delta, 1 / 30);
+
     if (!dragging.current && autoRotate) {
-      target.current.yaw += dt * 0.16;
+      target.current.yaw += dt * 0.1;
     }
 
-    const k = 1 - Math.exp(-dt * 12);
-    current.current.yaw += (target.current.yaw - current.current.yaw) * k;
-    current.current.pitch += (target.current.pitch - current.current.pitch) * k;
+    // Critically damped feel — smoother than hard lerp
+    const smooth = 1 - Math.exp(-dt * 6.5);
+    current.current.yaw += (target.current.yaw - current.current.yaw) * smooth;
+    current.current.pitch += (target.current.pitch - current.current.pitch) * smooth;
 
     group.current.rotation.order = "YXZ";
     group.current.rotation.y = current.current.yaw;

@@ -21,8 +21,8 @@ export function SiteFooter() {
             <Link href="/configure/nova-h1" className="block text-text/90 hover:text-accent">
               Configurator
             </Link>
-            <Link href="/assistant" className="block text-text/90 hover:text-accent">
-              AI Concierge
+            <Link href="/compare" className="block text-text/90 hover:text-accent">
+              Compare
             </Link>
           </div>
           <div className="space-y-3">
@@ -45,7 +45,7 @@ export function SiteFooter() {
             Drop GLB assets
           </p>
           <p className="mt-3 text-[14px] text-muted">
-            Place models in <code className="text-accent-2">/public/models/</code>
+            Place models in <code className="text-accent">/public/models/</code>
           </p>
         </div>
       </div>

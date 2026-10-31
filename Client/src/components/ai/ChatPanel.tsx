@@ -90,7 +90,7 @@ export function ChatPanel({ productSlug, compact }: Props) {
           </div>
         ))}
         {loading && (
-          <p className="font-mono text-[14px] text-accent-2">Listening to the catalog…</p>
+          <p className="font-mono text-[14px] text-accent">Listening to the catalog…</p>
         )}
       </div>
       <form
@@ -104,17 +104,17 @@ export function ChatPanel({ productSlug, compact }: Props) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask about ANC, battery, gifts…"
-          className="min-w-0 flex-1 border border-line bg-void px-4 py-3 text-[14px] outline-none focus:border-accent-2"
+          className="min-w-0 flex-1 border border-line bg-void px-4 py-3 text-[14px] outline-none focus:border-accent"
           aria-label="Message to NOVA AI"
         />
-        <Button type="submit" variant="mint" disabled={loading}>
+        <Button type="submit" disabled={loading}>
           Send
         </Button>
       </form>
       {!compact && (
         <p className="border-t border-line px-4 py-2 text-[14px] text-muted">
           Prefer browsing?{" "}
-          <Link href="/products" className="text-accent-2 underline-offset-2 hover:underline">
+          <Link href="/products" className="text-accent underline-offset-2 hover:underline">
             Open catalog
           </Link>
         </p>

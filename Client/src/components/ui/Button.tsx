@@ -11,7 +11,6 @@ const variants = {
     "bg-accent text-white shadow-[0_10px_28px_rgba(255,77,46,0.28)] hover:brightness-110",
   secondary:
     "border border-line bg-transparent text-text hover:border-muted hover:bg-panel",
-  mint: "btn-mint",
   ghost: "text-muted hover:text-text",
 } as const;
 

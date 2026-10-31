@@ -14,7 +14,6 @@ const links = [
   { href: "/products", label: "Products" },
   { href: "/configure/nova-h1", label: "Configure" },
   { href: "/compare", label: "Compare" },
-  { href: "/assistant", label: "AI" },
 ];
 
 export function SiteHeader() {
@@ -62,7 +61,7 @@ export function SiteHeader() {
           <button
             type="button"
             onClick={() => dispatch(setChatOpen(true))}
-            className="btn-mint hidden min-h-9 items-center gap-1.5 rounded-full px-3.5 py-2 text-[14px] sm:inline-flex"
+            className="hidden min-h-9 cursor-pointer items-center gap-1.5 rounded-full border border-accent/40 bg-accent px-3.5 py-2 text-[14px] font-medium text-white shadow-[0_8px_24px_rgba(255,77,46,0.28)] transition hover:brightness-110 sm:inline-flex"
           >
             <Sparkles className="h-3.5 w-3.5" />
             Ask NOVA

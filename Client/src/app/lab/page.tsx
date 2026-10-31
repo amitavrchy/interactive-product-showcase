@@ -18,7 +18,7 @@ export default function LabPage() {
       </h1>
       <p className="mt-4 max-w-xl text-[16px] text-muted">
         Procedural headphone mesh with explode toggle — drop real GLBs in{" "}
-        <code className="text-accent-2">/public/models</code> when ready.
+        <code className="text-accent">/public/models</code> when ready.
       </p>
       <div className="mt-8 flex flex-wrap gap-3">
         <Button type="button" onClick={() => setExploded((v) => !v)}>

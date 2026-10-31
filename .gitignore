@@ -16,3 +16,6 @@ ai/data/
 !**/.env.example
 
 Server/prisma/*.db.bak
+
+# Local Netlify folder
+.netlify

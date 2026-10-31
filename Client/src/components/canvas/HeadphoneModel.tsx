@@ -68,38 +68,50 @@ export function HeadphoneModel({
 
   useGSAP(
     () => {
-      // Soft explode — stays in frame (no camera zoom / Bounds re-fit)
-      const tl = gsap.timeline({ defaults: { duration: 1.05, ease: "power2.inOut" } });
+      const ease = "power3.inOut";
+      const duration = 1.25;
+      const targets = [
+        leftCup.current,
+        rightCup.current,
+        band.current,
+        leftCushion.current,
+        rightCushion.current,
+        driverL.current,
+        driverR.current,
+      ].filter(Boolean);
+      if (!targets.length) return;
+
+      const tl = gsap.timeline({ defaults: { duration, ease } });
       if (exploded) {
-        tl.to(leftCup.current?.position ?? {}, { x: -1.05 }, 0)
-          .to(rightCup.current?.position ?? {}, { x: 1.05 }, 0)
-          .to(band.current?.position ?? {}, { y: 0.28 }, 0)
-          .to(leftCushion.current?.position ?? {}, { x: -0.14 }, 0)
-          .to(rightCushion.current?.position ?? {}, { x: 0.14 }, 0)
-          .to(driverL.current?.position ?? {}, { x: -0.08, z: 0.06 }, 0)
-          .to(driverR.current?.position ?? {}, { x: 0.08, z: 0.06 }, 0);
+        tl.to(leftCup.current!.position, { x: -1.05 }, 0)
+          .to(rightCup.current!.position, { x: 1.05 }, 0)
+          .to(band.current!.position, { y: 0.28 }, 0)
+          .to(leftCushion.current!.position, { x: -0.14 }, 0)
+          .to(rightCushion.current!.position, { x: 0.14 }, 0)
+          .to(driverL.current!.position, { x: -0.08, z: 0.06 }, 0)
+          .to(driverR.current!.position, { x: 0.08, z: 0.06 }, 0);
       } else {
-        tl.to(leftCup.current?.position ?? {}, { x: -0.78 }, 0)
-          .to(rightCup.current?.position ?? {}, { x: 0.78 }, 0)
-          .to(band.current?.position ?? {}, { y: 0 }, 0)
-          .to(leftCushion.current?.position ?? {}, { x: 0 }, 0)
-          .to(rightCushion.current?.position ?? {}, { x: 0 }, 0)
-          .to(driverL.current?.position ?? {}, { x: 0, z: 0 }, 0)
-          .to(driverR.current?.position ?? {}, { x: 0, z: 0 }, 0);
+        tl.to(leftCup.current!.position, { x: -0.78 }, 0)
+          .to(rightCup.current!.position, { x: 0.78 }, 0)
+          .to(band.current!.position, { y: 0 }, 0)
+          .to(leftCushion.current!.position, { x: 0 }, 0)
+          .to(rightCushion.current!.position, { x: 0 }, 0)
+          .to(driverL.current!.position, { x: 0, z: 0 }, 0)
+          .to(driverR.current!.position, { x: 0, z: 0 }, 0);
       }
     },
     { dependencies: [exploded] },
   );
 
-  useFrame((state) => {
+  useFrame((_, delta) => {
     if (!group.current || !float) return;
-    const t = state.clock.elapsedTime;
-    // Gentle yaw only — no vertical bob (avoids top clipping)
-    group.current.rotation.y = Math.sin(t * 0.22) * 0.1;
+    const dt = Math.min(delta, 1 / 30);
+    const targetY = Math.sin(performance.now() * 0.00035) * 0.06;
+    group.current.rotation.y += (targetY - group.current.rotation.y) * (1 - Math.exp(-dt * 4));
   });
 
   return (
-    <group ref={group} scale={scale} dispose={null} key={colorHex}>
+    <group ref={group} scale={scale} dispose={null}>
       <group ref={band} position={[0, 0, 0]}>
         <mesh castShadow rotation={[0, 0, Math.PI / 2]} position={[0, 0.52, 0]}>
           <torusGeometry args={[0.7, 0.044, 24, 64, Math.PI]} />

@@ -120,7 +120,7 @@ export default function CheckoutPage() {
   if (orderId && !clientSecret) {
     return (
       <div className="mx-auto max-w-lg px-5 py-24 text-center">
-        <p className="font-mono text-[12px] uppercase tracking-[0.28em] text-accent-2">
+        <p className="font-mono text-[12px] uppercase tracking-[0.28em] text-accent">
           Payment complete
         </p>
         <h1 className="font-display mt-4 text-[40px]">Thank you</h1>
