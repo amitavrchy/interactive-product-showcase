@@ -1,2 +1,2 @@
 # prisma migration lock
-provider = "sqlite"
+provider = "postgresql"
