@@ -1,6 +1,9 @@
 [build]
-  command = "npm run build"
+  command = "npm run build && node ./netlify-plugins/win-static-fix/patch-after-install.js"
   publish = ".next"
+
+[[plugins]]
+  package = "./netlify-plugins/win-static-fix"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
