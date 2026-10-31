@@ -14,3 +14,5 @@ __pycache__/
 Server/prisma/dev.db
 ai/data/
 !**/.env.example
+
+Server/prisma/*.db.bak
