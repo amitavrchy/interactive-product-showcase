@@ -1,15 +1,88 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FULFILLED
+  CANCELLED
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  passwordHash String
+  name         String
+  role         Role          @default(CUSTOMER)
+  orders       Order[]
+  savedConfigs SavedConfig[]
+  createdAt    DateTime      @default(now())
+}
+
+model Product {
+  id          String         @id @default(cuid())
+  slug        String         @unique
+  name        String
+  tagline     String
+  description String
+  basePrice   Decimal
+  specsJson   Json
+  modelUrl    String?
+  embedText   String
+  variants    Variant[]
+  media       ProductMedia[]
+  published   Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+}
+
+model Variant {
+  id         String  @id @default(cuid())
+  productId  String
+  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sku        String  @unique
+  colorName  String
+  colorHex   String
+  priceDelta Decimal @default(0)
+  stock      Int     @default(100)
+}
+
+model ProductMedia {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  kind      String  @default("image")
+  sortOrder Int     @default(0)
+}
+
+model SavedConfig {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId  String
+  configJson Json
+  shareCode  String   @unique @default(cuid())
+  createdAt  DateTime @default(now())
+}
+
+model Order {
+  id        String      @id @default(cuid())
+  userId    String?
+  user      User?       @relation(fields: [userId], references: [id])
+  email     String
+  status    OrderStatus @default(PENDING)
+  total     Decimal
+  itemsJson Json
+  createdAt DateTime    @default(now())
+}

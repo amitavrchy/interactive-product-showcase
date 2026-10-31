@@ -9,4 +9,8 @@ out/
 __pycache__/
 *.log
 .DS_Store
+*.db
+*.db-journal
+Server/prisma/dev.db
+ai/data/
 !**/.env.example

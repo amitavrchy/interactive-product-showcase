@@ -1,9 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  /* Interactive 3D / Redux app — avoid blocking prerender of client stores */
+  cacheComponents: false,
   turbopack: {
     rules: {
       "*.css": {
