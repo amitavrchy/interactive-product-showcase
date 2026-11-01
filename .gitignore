@@ -2,8 +2,6 @@ node_modules/
 .next/
 dist/
 out/
-.env
-.env.*
 !.env.example
 .venv/
 __pycache__/
@@ -19,3 +17,4 @@ Server/prisma/*.db.bak
 
 # Local Netlify folder
 .netlify
+config.bat
