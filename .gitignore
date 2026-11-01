@@ -11,11 +11,11 @@ __pycache__/
 .DS_Store
 *.db
 *.db-journal
-Server/prisma/dev.db
+backend/prisma/dev.db
 ai/data/
 !**/.env.example
 
-Server/prisma/*.db.bak
+backend/prisma/*.db.bak
 
 # Local Netlify folder
 .netlify

@@ -109,7 +109,7 @@ Full-page AI chat with product citations + “add to bag” cards.
 ## 6. Frontend Architecture
 
 ```
-Client/src/
+frontend/src/
   app/(shop)/ ...
   components/canvas/ (Scene, HeadphoneModel, ExplodedRig, ColorMaterials)
   components/configurator/ (Swatches, EngravingInput, PriceBar)
@@ -231,7 +231,7 @@ System: “You are NOVA Audio’s product expert. Answer only from provided cont
 
 ### Flow
 1. On deploy/seed: `POST /ingest`
-2. Client ChatPanel streams or waits on `/chat`
+2. The storefront ChatPanel streams or waits on `/chat`
 3. Citations render as product cards linking to PDP
 4. Env: `OPENAI_API_KEY`, `NEST_API_URL`, `CHROMA_PATH`
 

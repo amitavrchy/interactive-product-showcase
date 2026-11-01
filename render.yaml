@@ -5,8 +5,8 @@ services:
     runtime: docker
     plan: free
     region: oregon
-    dockerfilePath: ./Server/Dockerfile.render
-    dockerContext: ./Server
+    dockerfilePath: ./backend/Dockerfile.render
+    dockerContext: ./backend
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV

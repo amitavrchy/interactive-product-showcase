@@ -78,7 +78,7 @@ if [ "$DB_EXISTS" != "1" ]; then
   su -s /bin/bash postgres -c "$PG_BIN/createdb -h 127.0.0.1 -U '$POSTGRES_USER' '$POSTGRES_DB'"
 fi
 
-cd /app/Server
+cd /app/backend
 echo "[entrypoint] prisma migrate deploy"
 npx prisma migrate deploy
 
