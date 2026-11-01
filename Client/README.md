@@ -14,4 +14,4 @@ npm run build
 npm run start
 ```
 
-The dev server listens on [http://localhost:3000](http://localhost:3000). Copy `.env.example` to `.env.local` before pointing the app at a non-local API.
+Copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_API_URL`. The deployed storefront is [https://nova-audio-163.netlify.app](https://nova-audio-163.netlify.app).
